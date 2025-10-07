@@ -1,5 +1,7 @@
 import { Router } from "express";
 import tarefaController from "../controllers/tarefaController";
+import validate from "../middlewares/validate";
+import { tarefaSchema, tarefaUpdateSchema } from "../schemas/tarefaSchema";
 
 const routes = Router();
 
@@ -8,6 +10,31 @@ const routes = Router();
  * tags:
  *   name: Tarefas
  *   description: Gerenciamento de Tarefas
+ * 
+ * components:
+ *   schemas:
+ *     Tarefa:
+ *       type: object
+ *       required:
+ *         - titulo
+ *         - projetoId
+ *       properties:
+ *         titulo:
+ *           type: string
+ *           example: "Implementar API"
+ *         descricao:
+ *           type: string
+ *           example: "Criar endpoints para gerenciar tarefas"
+ *         prazo:
+ *           type: string
+ *           format: date
+ *           example: "1970-01-01T00:00:00.000Z"
+ *         projetoId:
+ *           type: number
+ *           example: 1
+ *         assigneeId:
+ *           type: number
+ *           example: 2
  */
 
 /**
@@ -29,15 +56,7 @@ const routes = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               titulo:
- *                 type: string
- *               descricao:
- *                 type: string
- *               status:
- *                 type: string
- *                 enum: [pendente, em_andamento, concluida]
+ *             $ref: '#/components/schemas/Tarefa'
  *     responses:
  *       201:
  *         description: Tarefa criada com sucesso
@@ -78,15 +97,7 @@ const routes = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               titulo:
- *                 type: string
- *               descricao:
- *                 type: string
- *               status:
- *                 type: string
- *                 enum: [pendente, em_andamento, concluida]
+ *             $ref: '#/components/schemas/Tarefa'
  *     responses:
  *       200:
  *         description: Tarefa atualizada com sucesso
@@ -106,7 +117,7 @@ const routes = Router();
  *         schema:
  *           type: string
  *     responses:
- *       200:
+ *       204:
  *         description: Tarefa removida com sucesso
  *       404:
  *         description: Tarefa não encontrada
@@ -114,10 +125,10 @@ const routes = Router();
  *         description: Erro interno do servidor
  */
 
-routes.post("/tarefas", tarefaController.createTarefa);
+routes.post("/tarefas", validate(tarefaSchema), tarefaController.createTarefa);
 routes.get("/tarefas", tarefaController.getTarefas);
 routes.get("/tarefas/:id", tarefaController.getTarefaById);
-routes.put("/tarefas/:id", tarefaController.updateTarefa);
+routes.put("/tarefas/:id", validate(tarefaUpdateSchema), tarefaController.updateTarefa);
 routes.delete("/tarefas/:id", tarefaController.deleteTarefa);
 
 export default routes;

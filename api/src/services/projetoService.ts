@@ -5,10 +5,13 @@ const prisma = new PrismaClient();
 const projetoService = {
     async getProjetos(): Promise<Projeto[]> {
         return prisma.projeto.findMany();
+        
     }, //getProjetos
 
     async getProjetoById(id: number): Promise<Projeto | null> {
-        return prisma.projeto.findUnique({ where: { id } });
+        return prisma.projeto.findUnique({ where: { id }, include: {
+            tarefas: true,
+          }, });
     }, //getProjetoById
 
     async createProjeto(data: {

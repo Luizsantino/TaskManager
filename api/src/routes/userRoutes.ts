@@ -1,5 +1,7 @@
 import { Router } from "express";
 import userController from "../controllers/userController";
+import validate from "../middlewares/validate";
+import { userSchema, userUpdateSchema } from "../schemas/userSchema";
 
 const routes = Router();
 
@@ -29,14 +31,7 @@ const routes = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               nome:
- *                 type: string
- *               email:
- *                 type: string
- *               senha:
- *                 type: string
+ *             $ref: '#/components/schemas/User'
  *     responses:
  *       201:
  *         description: Usuário criado com sucesso
@@ -45,7 +40,23 @@ const routes = Router();
  *       500:
  *         description: Erro interno do servidor
  */
-
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - nome
+ *         - cargo
+ *       properties:
+ *         nome:
+ *           type: string
+ *           example: "João da Silva"
+ *         cargo:
+ *           type: string
+ *           example: "Desenvolvedor"
+ */
 /**
  * @swagger
  * /users/{id}:
@@ -77,14 +88,7 @@ const routes = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               nome:
- *                 type: string
- *               email:
- *                 type: string
- *               senha:
- *                 type: string
+ *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
  *         description: Usuário atualizado com sucesso
@@ -104,7 +108,7 @@ const routes = Router();
  *         schema:
  *           type: string
  *     responses:
- *       200:
+ *       204:
  *         description: Usuário removido com sucesso
  *       404:
  *         description: Usuário não encontrado
@@ -112,10 +116,10 @@ const routes = Router();
  *         description: Erro interno do servidor
  */
 
-routes.post("/users", userController.createUser);
+routes.post("/users", validate(userSchema), userController.createUser);
 routes.get("/users", userController.getUsers);
 routes.get("/users/:id", userController.getUserById);
-routes.put("/users/:id", userController.updateUser);
+routes.put("/users/:id", validate(userUpdateSchema), userController.updateUser);
 routes.delete("/users/:id", userController.deleteUser);
 
 export default routes;

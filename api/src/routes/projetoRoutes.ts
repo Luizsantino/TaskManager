@@ -1,5 +1,7 @@
 import { Router } from "express";
 import projetoController from "../controllers/projetoController";
+import validate from "../middlewares/validate";
+import { projetoSchema, projetoUpdateSchema } from "../schemas/projetoSchema";
 
 const routes = Router();
 
@@ -8,6 +10,31 @@ const routes = Router();
  * tags:
  *   name: Projetos
  *   description: Gerenciamento de Projetos
+ * 
+ * components:
+ *   schemas:
+ *     Projeto:
+ *       type: object
+ *       required:
+ *         - nome
+ *         - descricao
+ *         - dataInicio
+ *         - dataFimPrevista
+ *       properties:
+ *         nome:
+ *           type: string
+ *           example: "Projeto API"
+ *         descricao:
+ *           type: string
+ *           example: "Projeto para gerenciar tarefas e usuários"
+ *         dataInicio:
+ *           type: string
+ *           format: date
+ *           example: "1970-01-01T00:00:00.000Z"
+ *         dataFimPrevista:
+ *           type: string
+ *           format: date
+ *           example: "1970-01-01T00:00:00.000Z"
  */
 
 /**
@@ -29,12 +56,7 @@ const routes = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               nome:
- *                 type: string
- *               descricao:
- *                 type: string
+ *             $ref: '#/components/schemas/Projeto'
  *     responses:
  *       201:
  *         description: Projeto criado com sucesso
@@ -75,12 +97,7 @@ const routes = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               nome:
- *                 type: string
- *               descricao:
- *                 type: string
+ *             $ref: '#/components/schemas/Projeto'
  *     responses:
  *       200:
  *         description: Projeto atualizado com sucesso
@@ -100,7 +117,7 @@ const routes = Router();
  *         schema:
  *           type: string
  *     responses:
- *       200:
+ *       204:
  *         description: Projeto removido com sucesso
  *       404:
  *         description: Projeto não encontrado
@@ -108,10 +125,10 @@ const routes = Router();
  *         description: Erro interno do servidor
  */
 
-routes.post("/projetos", projetoController.createProjeto);
+routes.post("/projetos", validate(projetoSchema), projetoController.createProjeto);
 routes.get("/projetos", projetoController.getProjetos);
 routes.get("/projetos/:id", projetoController.getProjetoById);
-routes.put("/projetos/:id", projetoController.updateProjeto);
+routes.put("/projetos/:id", validate(projetoUpdateSchema), projetoController.updateProjeto);
 routes.delete("/projetos/:id", projetoController.deleteProjeto);
 
 export default routes;
