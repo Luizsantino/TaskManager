@@ -1,0 +1,25 @@
+2025-10-06 22:56:44.898 UTC [5849] LOG:  starting PostgreSQL 15.7 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.3.0, 64-bit
+2025-10-06 22:56:44.898 UTC [5849] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-10-06 22:56:44.904 UTC [5849] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-10-06 22:56:44.922 UTC [5855] LOG:  database system was shut down at 2025-10-06 22:07:55 UTC
+2025-10-06 22:56:44.957 UTC [5849] LOG:  database system is ready to accept connections
+2025-10-06 22:56:48.127 UTC [5910] LOG:  invalid length of startup packet
+2025-10-06 22:56:48.139 UTC [5911] LOG:  invalid length of startup packet
+2025-10-06 22:56:48.338 UTC [5912] LOG:  invalid length of startup packet
+2025-10-06 22:56:48.355 UTC [5913] LOG:  invalid length of startup packet
+2025-10-06 22:56:55.613 UTC [6021] FATAL:  database "taskmanager" does not exist
+2025-10-06 22:56:55.729 UTC [6026] FATAL:  database "taskmanager" does not exist
+2025-10-06 22:56:57.387 UTC [6041] ERROR:  relation "_prisma_migrations" does not exist at character 126
+2025-10-06 22:56:57.387 UTC [6041] STATEMENT:  SELECT "id", "checksum", "finished_at", "migration_name", "logs", "rolled_back_at", "started_at", "applied_steps_count" FROM "_prisma_migrations" ORDER BY "started_at" ASC
+2025-10-06 22:56:57.672 UTC [5853] LOG:  checkpoint starting: immediate force wait
+2025-10-06 22:56:57.889 UTC [5853] LOG:  checkpoint complete: wrote 956 buffers (5.8%); 1 WAL file(s) added, 0 removed, 0 recycled; write=0.046 s, sync=0.030 s, total=0.218 s; sync files=301, longest=0.005 s, average=0.001 s; distance=8928 kB, estimate=8928 kB
+2025-10-06 22:56:58.376 UTC [5853] LOG:  checkpoint starting: immediate force wait
+2025-10-06 22:56:58.414 UTC [5853] LOG:  checkpoint complete: wrote 19 buffers (0.1%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.007 s, sync=0.009 s, total=0.038 s; sync files=7, longest=0.006 s, average=0.002 s; distance=4620 kB, estimate=8497 kB
+2025-10-06 22:56:58.967 UTC [5853] LOG:  checkpoint starting: immediate force wait
+2025-10-06 22:56:59.019 UTC [5853] LOG:  checkpoint complete: wrote 82 buffers (0.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.008 s, sync=0.024 s, total=0.053 s; sync files=75, longest=0.011 s, average=0.001 s; distance=4908 kB, estimate=8138 kB
+2025-10-06 23:01:58.118 UTC [5853] LOG:  checkpoint starting: time
+2025-10-06 23:02:00.266 UTC [5853] LOG:  checkpoint complete: wrote 22 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.117 s, sync=0.008 s, total=2.149 s; sync files=16, longest=0.005 s, average=0.001 s; distance=18 kB, estimate=7326 kB
+2025-10-06 23:11:58.419 UTC [5853] LOG:  checkpoint starting: time
+2025-10-06 23:11:59.167 UTC [5853] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.710 s, sync=0.014 s, total=0.748 s; sync files=7, longest=0.011 s, average=0.002 s; distance=1 kB, estimate=6593 kB
+2025-10-06 23:31:58.548 UTC [5853] LOG:  checkpoint starting: time
+2025-10-06 23:31:59.796 UTC [5853] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.213 s, sync=0.010 s, total=1.248 s; sync files=11, longest=0.006 s, average=0.001 s; distance=1 kB, estimate=5934 kB

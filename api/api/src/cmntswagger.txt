@@ -1,0 +1,53 @@
+    /**
+     * @swagger
+     * /api/tarefas:
+     * post:
+     * summary: Cria uma nova tarefa e a inicia com o status 'A Fazer'.
+     * tags: [Tarefas]
+     * requestBody:
+     * required: true
+     * content:
+     * application/json:
+     * schema:
+     * type: object
+     * required:
+     * - titulo
+     * - projetoId
+     * properties:
+     * titulo:
+     * type: string
+     * example: Implementar o login com JWT
+     * descricao:
+     * type: string
+     * example: Desenvolver a rota e o service para autenticação de usuários.
+     * prazo:
+     * type: string
+     * format: date-time
+     * example: "2025-11-20T10:00:00.000Z"
+     * projetoId:
+     * type: integer
+     * description: O ID do projeto ao qual a tarefa pertence.
+     * example: 1
+     * assigneeId:
+     * type: integer
+     * description: O ID do usuário responsável pela tarefa (opcional).
+     * example: 5
+     * responses:
+     * 201:
+     * description: Tarefa criada com sucesso.
+     * content:
+     * application/json:
+     * schema:
+     * type: object
+     * properties:
+     * id: { type: integer, example: 1 }
+     * titulo: { type: string }
+     * statusTarefa: 
+     * type: object
+     * properties: 
+     * nome: { type: string, example: "A Fazer" }
+     * 400:
+     * description: Dados de entrada inválidos ou campos obrigatórios faltando.
+     * 500:
+     * description: Erro interno do servidor ou IDs (Projeto/Usuário) inexistentes.
+     */

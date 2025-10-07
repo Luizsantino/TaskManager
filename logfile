@@ -1,0 +1,58 @@
+2025-10-06 21:52:59.722 UTC [1253] LOG:  starting PostgreSQL 15.7 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.3.0, 64-bit
+2025-10-06 21:52:59.723 UTC [1253] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-10-06 21:52:59.731 UTC [1253] FATAL:  could not create lock file "/run/postgresql/.s.PGSQL.5432.lock": No such file or directory
+2025-10-06 21:52:59.739 UTC [1253] LOG:  database system is shut down
+2025-10-06 21:55:40.072 UTC [2040] LOG:  starting PostgreSQL 15.7 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.3.0, 64-bit
+2025-10-06 21:55:40.073 UTC [2040] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-10-06 21:55:40.080 UTC [2040] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-10-06 21:55:40.101 UTC [2043] LOG:  database system was shut down at 2025-10-06 21:49:49 UTC
+2025-10-06 21:55:40.123 UTC [2040] LOG:  database system is ready to accept connections
+2025-10-06 21:55:42.856 UTC [2101] LOG:  invalid length of startup packet
+2025-10-06 21:55:42.888 UTC [2102] LOG:  invalid length of startup packet
+2025-10-06 21:56:14.339 UTC [2234] FATAL:  database "taskmanager" does not exist
+2025-10-06 21:56:44.397 UTC [2380] FATAL:  database "taskmanager" does not exist
+2025-10-06 21:56:51.681 UTC [2424] FATAL:  database "taskmanager" does not exist
+2025-10-06 21:56:52.305 UTC [2428] FATAL:  database "youtube" does not exist
+2025-10-06 21:56:53.468 UTC [2432] FATAL:  database "taskmanager" does not exist
+2025-10-06 21:57:04.962 UTC [2488] FATAL:  database "taskmanager" does not exist
+2025-10-06 21:57:38.042 UTC [2642] FATAL:  database "taskmanager" does not exist
+2025-10-06 21:58:01.215 UTC [2740] FATAL:  database "taskmanager" does not exist
+2025-10-06 21:58:39.749 UTC [2880] FATAL:  database "taskmanager" does not exist
+2025-10-06 21:59:27.069 UTC [3142] FATAL:  database "taskmanager" does not exist
+2025-10-06 21:59:32.460 UTC [3180] FATAL:  database "taskmanager" does not exist
+2025-10-06 22:01:24.611 UTC [656] LOG:  starting PostgreSQL 15.7 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.3.0, 64-bit
+2025-10-06 22:01:24.612 UTC [656] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-10-06 22:01:24.626 UTC [656] FATAL:  could not create lock file "/run/postgresql/.s.PGSQL.5432.lock": No such file or directory
+2025-10-06 22:01:24.635 UTC [656] LOG:  database system is shut down
+2025-10-06 22:01:35.596 UTC [797] LOG:  starting PostgreSQL 15.7 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.3.0, 64-bit
+2025-10-06 22:01:35.596 UTC [797] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-10-06 22:01:35.603 UTC [797] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-10-06 22:01:35.619 UTC [800] LOG:  database system was interrupted; last known up at 2025-10-06 21:55:40 UTC
+2025-10-06 22:01:35.756 UTC [800] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-10-06 22:01:35.765 UTC [800] LOG:  redo starts at 0/15610B8
+2025-10-06 22:01:35.770 UTC [800] LOG:  invalid record length at 0/158FE48: wanted 24, got 0
+2025-10-06 22:01:35.772 UTC [800] LOG:  redo done at 0/158FE10 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-10-06 22:01:35.787 UTC [798] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-10-06 22:01:35.848 UTC [798] LOG:  checkpoint complete: wrote 33 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.015 s, sync=0.019 s, total=0.067 s; sync files=11, longest=0.013 s, average=0.002 s; distance=187 kB, estimate=187 kB
+2025-10-06 22:01:35.873 UTC [797] LOG:  database system is ready to accept connections
+2025-10-06 22:01:38.618 UTC [855] LOG:  invalid length of startup packet
+2025-10-06 22:01:38.633 UTC [856] LOG:  invalid length of startup packet
+2025-10-06 22:01:52.577 UTC [932] FATAL:  database "taskmanager" does not exist
+2025-10-06 22:01:52.583 UTC [933] FATAL:  database "taskmanager" does not exist
+2025-10-06 22:02:02.146 UTC [988] FATAL:  database "clinica" does not exist
+2025-10-06 22:02:02.153 UTC [989] FATAL:  database "clinica" does not exist
+2025-10-06 22:02:08.318 UTC [1028] FATAL:  database "clinica" does not exist
+2025-10-06 22:02:09.107 UTC [1032] FATAL:  database "clinica" does not exist
+2025-10-06 22:03:29.108 UTC [1399] FATAL:  database "taskmanager" does not exist
+2025-10-06 22:04:14.071 UTC [1577] FATAL:  database "taskmanager" does not exist
+2025-10-06 22:04:21.595 UTC [1624] FATAL:  database "taskmanager" does not exist
+2025-10-06 22:05:30.858 UTC [1894] FATAL:  database "taskmanager" does not exist
+2025-10-06 22:07:10.805 UTC [2248] FATAL:  lock file "postmaster.pid" already exists
+2025-10-06 22:07:10.805 UTC [2248] HINT:  Is another postmaster (PID 797) running in data directory "/home/user/TaskManager/local"?
+2025-10-06 22:07:55.188 UTC [797] LOG:  received fast shutdown request
+2025-10-06 22:07:55.196 UTC [797] LOG:  aborting any active transactions
+2025-10-06 22:07:55.204 UTC [797] LOG:  background worker "logical replication launcher" (PID 806) exited with exit code 1
+2025-10-06 22:07:55.210 UTC [798] LOG:  shutting down
+2025-10-06 22:07:55.215 UTC [798] LOG:  checkpoint starting: shutdown immediate
+2025-10-06 22:07:55.242 UTC [798] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.033 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=168 kB
+2025-10-06 22:07:55.256 UTC [797] LOG:  database system is shut down

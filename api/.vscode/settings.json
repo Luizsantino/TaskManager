@@ -1,0 +1,35 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "Main",
+      "database": "youtube",
+      "username": "user",
+      "password": "mypassword"
+    },
+    {
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "clinica",
+      "database": "clinica",
+      "username": "user"
+    },
+    {
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "taskmanager",
+      "group": "taskmanager",
+      "database": "taskmanager",
+      "username": "user"
+    }
+  ]
+}
