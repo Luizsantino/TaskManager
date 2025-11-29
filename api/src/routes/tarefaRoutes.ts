@@ -39,7 +39,7 @@ const routes = Router();
 
 /**
  * @swagger
- * /tarefas:
+ * /api/tarefas:
  *   get:
  *     summary: Retorna todas as tarefas
  *     tags: [Tarefas]
@@ -68,7 +68,7 @@ const routes = Router();
 
 /**
  * @swagger
- * /tarefas/{id}:
+ * /api/tarefas/{id}:
  *   get:
  *     summary: Retorna uma tarefa pelo ID
  *     tags: [Tarefas]

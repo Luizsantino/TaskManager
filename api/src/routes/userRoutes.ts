@@ -14,7 +14,7 @@ const routes = Router();
 
 /**
  * @swagger
- * /users:
+ * /api/users:
  *   get:
  *     summary: Retorna todos os usuários
  *     tags: [Users]
@@ -49,6 +49,8 @@ const routes = Router();
  *       required:
  *         - nome
  *         - cargo
+ *         - email
+ *         - senha
  *       properties:
  *         nome:
  *           type: string
@@ -56,10 +58,16 @@ const routes = Router();
  *         cargo:
  *           type: string
  *           example: "Desenvolvedor"
+ *         email:
+ *           type: string
+ *           example: "luiz.santino@gmail.com"
+ *         senha:
+ *           type: string
+ *           example: "senha123"
  */
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   get:
  *     summary: Retorna um usuário pelo ID
  *     tags: [Users]

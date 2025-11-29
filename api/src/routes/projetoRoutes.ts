@@ -39,7 +39,7 @@ const routes = Router();
 
 /**
  * @swagger
- * /projetos:
+ * /api/projetos:
  *   get:
  *     summary: Retorna todos os projetos
  *     tags: [Projetos]
@@ -68,7 +68,7 @@ const routes = Router();
 
 /**
  * @swagger
- * /projetos/{id}:
+ * /api/projetos/{id}:
  *   get:
  *     summary: Retorna um projeto pelo ID
  *     tags: [Projetos]

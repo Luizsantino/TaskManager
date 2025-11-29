@@ -71,7 +71,7 @@ export const CriarUserModal = ({
             setSalvando(false);
         }
 
-    }, [FormData, onSucess, onClose]);
+    }, [formData, onSucess, onClose]);
 
     const handleClose = useCallback(() => {
         setFormData(INITIAL_FORM_DATA);
@@ -109,6 +109,30 @@ export const CriarUserModal = ({
               required
               error={!!errors.email}
               helperText={errors.email}
+            />
+            <TextField
+              fullWidth
+              label="Cargo"
+              name="cargo"
+              type="text"
+              value={formData.cargo}
+              onChange={handleInputChange}
+              placeholder="Digite o cargo"
+              required
+              error={!!errors.cargo}
+              helperText={errors.cargo}
+            />
+            <TextField
+              fullWidth
+              label="Senha"
+              name="senha"
+              type="password"
+              value={formData.senha}
+              onChange={handleInputChange}
+              placeholder="Digite a senha"
+              required
+              error={!!errors.senha}
+              helperText={errors.senha}
             />
           </Box>
         </DialogContent>
