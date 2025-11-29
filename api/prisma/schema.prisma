@@ -17,6 +17,8 @@ model User {
   id    Int    @id @default(autoincrement())
   nome  String
   cargo String
+  email String
+  senha String
   
   tarefas Tarefa[] //relacionamento um user pode ter muitas tarefas vinculadas a ele
 
