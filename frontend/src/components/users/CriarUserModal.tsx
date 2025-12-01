@@ -58,18 +58,30 @@ export const CriarUserModal = ({
         }
 
         setSalvando(true);
-        try {
-            const novoUser = await createUser(validation.data);
-            onSucess(novoUser);
-            setFormData(INITIAL_FORM_DATA);
-            setErrors({});
-            onClose();
-        }   catch (error) {
-            console.error("Erro ao criar o usuário:", error);
-            setErrors({ submit: "Erro ao criar usuário. Tente novamente." });
-        } finally {
-            setSalvando(false);
-        }
+try {
+    const novoUser = await createUser(validation.data);
+    onSucess(novoUser);
+    setFormData(INITIAL_FORM_DATA);
+    setErrors({});
+    onClose();
+} catch (error: unknown) {
+    if (error instanceof Error) {
+        // Se for erro comum (ex: erro de validação do frontend)
+        console.error("Erro ao criar o usuário:", error.message);
+    } else if (typeof error === "object" && error !== null && "response" in error) {
+        // Se for erro de API (ex: Axios)
+        const err = error as any;
+        console.error("Erro ao criar o usuário:", err.response?.data || err.message);
+    } else {
+        console.error("Erro desconhecido ao criar o usuário:", error);
+    }
+
+    setErrors({
+        submit: "Erro ao criar usuário. Tente novamente.",
+    });
+} finally {
+    setSalvando(false);
+}
 
     }, [formData, onSucess, onClose]);
 

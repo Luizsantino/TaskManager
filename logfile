@@ -56,3 +56,56 @@
 2025-10-06 22:07:55.215 UTC [798] LOG:  checkpoint starting: shutdown immediate
 2025-10-06 22:07:55.242 UTC [798] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.033 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=168 kB
 2025-10-06 22:07:55.256 UTC [797] LOG:  database system is shut down
+2025-12-01 16:04:45.645 UTC [1515] LOG:  starting PostgreSQL 15.7 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.3.0, 64-bit
+2025-12-01 16:04:45.645 UTC [1515] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-01 16:04:45.652 UTC [1515] FATAL:  could not create lock file "/run/postgresql/.s.PGSQL.5432.lock": No such file or directory
+2025-12-01 16:04:45.658 UTC [1515] LOG:  database system is shut down
+2025-12-01 16:04:57.364 UTC [1630] LOG:  starting PostgreSQL 15.7 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.3.0, 64-bit
+2025-12-01 16:04:57.365 UTC [1630] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-01 16:04:57.373 UTC [1630] FATAL:  could not create lock file "/run/postgresql/.s.PGSQL.5432.lock": No such file or directory
+2025-12-01 16:04:57.378 UTC [1630] LOG:  database system is shut down
+2025-12-01 16:05:25.836 UTC [1796] LOG:  starting PostgreSQL 15.7 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.3.0, 64-bit
+2025-12-01 16:05:25.837 UTC [1796] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-01 16:05:25.845 UTC [1796] FATAL:  could not create lock file "/run/postgresql/.s.PGSQL.5432.lock": No such file or directory
+2025-12-01 16:05:25.851 UTC [1796] LOG:  database system is shut down
+2025-12-01 16:13:15.222 UTC [3461] LOG:  starting PostgreSQL 15.7 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.3.0, 64-bit
+2025-12-01 16:13:15.222 UTC [3461] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-01 16:13:15.231 UTC [3461] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-01 16:13:15.254 UTC [3464] LOG:  database system was shut down at 2025-11-26 16:06:54 UTC
+2025-12-01 16:13:15.298 UTC [3461] LOG:  database system is ready to accept connections
+2025-12-01 16:13:19.709 UTC [3530] LOG:  invalid length of startup packet
+2025-12-01 16:13:19.736 UTC [3531] LOG:  invalid length of startup packet
+2025-12-01 16:13:24.177 UTC [3544] FATAL:  database "taskmanager" does not exist
+2025-12-01 16:13:31.043 UTC [3590] FATAL:  database "taskmanager" does not exist
+2025-12-01 16:15:18.659 UTC [4066] FATAL:  role "postgres" does not exist
+2025-12-01 16:15:55.689 UTC [3461] LOG:  received fast shutdown request
+2025-12-01 16:15:55.698 UTC [3461] LOG:  aborting any active transactions
+2025-12-01 16:15:55.713 UTC [3461] LOG:  background worker "logical replication launcher" (PID 3467) exited with exit code 1
+2025-12-01 16:15:55.713 UTC [3462] LOG:  shutting down
+2025-12-01 16:15:55.721 UTC [3462] LOG:  checkpoint starting: shutdown immediate
+2025-12-01 16:15:55.777 UTC [3462] LOG:  checkpoint complete: wrote 34 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.016 s, sync=0.018 s, total=0.064 s; sync files=10, longest=0.008 s, average=0.002 s; distance=179 kB, estimate=179 kB
+2025-12-01 16:15:55.791 UTC [3461] LOG:  database system is shut down
+2025-12-01 16:16:16.401 UTC [4505] LOG:  starting PostgreSQL 15.7 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.3.0, 64-bit
+2025-12-01 16:16:16.401 UTC [4505] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-01 16:16:16.408 UTC [4505] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+2025-12-01 16:16:16.426 UTC [4508] LOG:  database system was shut down at 2025-12-01 16:15:55 UTC
+2025-12-01 16:16:16.449 UTC [4505] LOG:  database system is ready to accept connections
+2025-12-01 16:16:46.669 UTC [4715] FATAL:  role "postgres" does not exist
+2025-12-01 16:17:15.382 UTC [4834] FATAL:  role "luiz" does not exist
+2025-12-01 16:17:24.463 UTC [4918] FATAL:  role "luiz" does not exist
+2025-12-01 16:19:10.720 UTC [5298] FATAL:  role "postgres" does not exist
+2025-12-01 16:21:16.515 UTC [4506] LOG:  checkpoint starting: time
+2025-12-01 16:21:16.746 UTC [4506] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.077 s, sync=0.004 s, total=0.232 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB
+2025-12-01 16:45:40.582 UTC [10563] LOG:  invalid length of startup packet
+2025-12-01 16:45:40.604 UTC [10564] LOG:  invalid length of startup packet
+2025-12-01 16:48:36.716 UTC [11162] FATAL:  lock file "postmaster.pid" already exists
+2025-12-01 16:48:36.716 UTC [11162] HINT:  Is another postmaster (PID 4505) running in data directory "/home/user/TaskManager/local"?
+2025-12-01 16:59:29.585 UTC [14256] FATAL:  role "luiz" does not exist
+2025-12-01 17:00:26.063 UTC [14549] FATAL:  role "postgres" does not exist
+2025-12-01 17:02:36.307 UTC [15141] FATAL:  database "user" does not exist
+2025-12-01 17:03:19.925 UTC [4505] LOG:  received smart shutdown request
+2025-12-01 17:03:19.947 UTC [4505] LOG:  background worker "logical replication launcher" (PID 4511) exited with exit code 1
+2025-12-01 17:03:19.950 UTC [4506] LOG:  shutting down
+2025-12-01 17:03:19.956 UTC [4506] LOG:  checkpoint starting: shutdown immediate
+2025-12-01 17:03:19.986 UTC [4506] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.036 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=0 kB
+2025-12-01 17:03:20.003 UTC [4505] LOG:  database system is shut down

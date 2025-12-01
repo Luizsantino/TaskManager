@@ -5,7 +5,7 @@ export const loginSchema = z.object({
   senha: z
     .string()
     .min(1, "Senha é obrigatória")
-    .min(4, "Senha com menos de 4 caracteres"),
+    .min(1, "A senha é obrigatória."),
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;

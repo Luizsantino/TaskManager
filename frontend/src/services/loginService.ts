@@ -18,33 +18,40 @@ interface LoginResponse {
  */
 export const login = async (email: string, senha: string): Promise<User> => {
     try {
-        // Chama o endpoint de login com as credenciais
-        const response = await axios.post<LoginResponse>(API_ENDPOINTS.LOGIN, {
-            email,
-            senha,
-        });
-
-        const { token, user } = response.data;
-
-        // 1. Armazenar o token para manter a sessão após recarregar a página
-        localStorage.setItem("authToken", token); 
-        
-        // 2. Configurar o cabeçalho de autenticação para TODAS as chamadas futuras
-        // Assim, as rotas protegidas por middleware (ex: projetos, tarefas) funcionarão.
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-        return user;
-
+      // Chama o endpoint de login com as credenciais
+      const response = await axios.post<LoginResponse>(API_ENDPOINTS.LOGIN, {
+        email,
+        senha,
+      });
+  
+      const { token, user } = response.data;
+  
+      // 1. Armazenar o token para manter a sessão após recarregar a página
+      localStorage.setItem("authToken", token);
+  
+      // 2. Configurar o cabeçalho de autenticação para TODAS as chamadas futuras
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  
+      return user;
+  
     } catch (error) {
-        // Trata erros comuns, como credenciais inválidas (Status 401)
-        if (axios.isAxiosError(error) && error.response?.status === 401) {
-            // Lança uma mensagem amigável para o Front-end
-            throw new Error("E-mail ou senha inválidos. Tente novamente.");
-        }
-        // Lança outros erros para serem tratados pelo componente
-        throw error;
+      // Log detalhado para debugging
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Erro detalhado no login:",
+          error.response?.data || error.message
+        );
+      }
+  
+      // Trata erros comuns (credenciais inválidas)
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        throw new Error("E-mail ou senha inválidos. Tente novamente.");
+      }
+  
+      // Se vier outro tipo de erro, relança para o componente tratar
+      throw error;
     }
-};
+  };
 
 // Adicione esta função para facilitar o Logoff
 export const logout = () => {

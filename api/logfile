@@ -80,3 +80,47 @@
 2025-11-29 14:06:44.139 UTC [27452] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.510 s, sync=0.007 s, total=0.535 s; sync files=5, longest=0.005 s, average=0.002 s; distance=1 kB, estimate=3730 kB
 2025-11-29 17:33:25.773 UTC [103821] ERROR:  column "senhaHash" of relation "users" does not exist at character 54
 2025-11-29 17:33:25.773 UTC [103821] STATEMENT:  INSERT INTO "public"."users" ("nome","cargo","email","senhaHash") VALUES ($1,$2,$3,$4) RETURNING "public"."users"."id", "public"."users"."nome", "public"."users"."cargo", "public"."users"."email", "public"."users"."senhaHash"
+2025-12-01 09:20:36.832 UTC [1129] LOG:  starting PostgreSQL 15.7 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.3.0, 64-bit
+2025-12-01 09:20:36.833 UTC [1129] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-12-01 09:20:36.844 UTC [1129] LOG:  listening on Unix socket "/home/user/TaskManager/api/tmp_sockets/.s.PGSQL.5432"
+2025-12-01 09:20:36.858 UTC [1132] LOG:  database system was interrupted; last known up at 2025-11-29 14:06:44 UTC
+2025-12-01 09:20:36.976 UTC [1132] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-12-01 09:20:36.998 UTC [1132] LOG:  redo starts at 0/234B940
+2025-12-01 09:20:36.998 UTC [1132] LOG:  invalid record length at 0/234BA28: wanted 24, got 0
+2025-12-01 09:20:36.998 UTC [1132] LOG:  redo done at 0/234B9F0 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-12-01 09:20:37.032 UTC [1130] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-12-01 09:20:37.061 UTC [1130] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.006 s, sync=0.003 s, total=0.034 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB
+2025-12-01 09:20:37.075 UTC [1129] LOG:  database system is ready to accept connections
+2025-12-01 09:20:40.206 UTC [1201] LOG:  invalid length of startup packet
+2025-12-01 09:20:40.245 UTC [1202] LOG:  invalid length of startup packet
+2025-12-01 09:21:53.779 UTC [1574] ERROR:  column users.senhaHash does not exist at character 108
+2025-12-01 09:21:53.779 UTC [1574] STATEMENT:  SELECT "public"."users"."id", "public"."users"."nome", "public"."users"."cargo", "public"."users"."email", "public"."users"."senhaHash" FROM "public"."users" WHERE ("public"."users"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2025-12-01 09:22:32.458 UTC [1753] ERROR:  column "senhaHash" of relation "users" does not exist at character 54
+2025-12-01 09:22:32.458 UTC [1753] STATEMENT:  INSERT INTO "public"."users" ("nome","cargo","email","senhaHash") VALUES ($1,$2,$3,$4) RETURNING "public"."users"."id", "public"."users"."nome", "public"."users"."cargo", "public"."users"."email", "public"."users"."senhaHash"
+2025-12-01 09:24:11.377 UTC [1753] ERROR:  column "senhaHash" of relation "users" does not exist at character 54
+2025-12-01 09:24:11.377 UTC [1753] STATEMENT:  INSERT INTO "public"."users" ("nome","cargo","email","senhaHash") VALUES ($1,$2,$3,$4) RETURNING "public"."users"."id", "public"."users"."nome", "public"."users"."cargo", "public"."users"."email", "public"."users"."senhaHash"
+2025-12-01 09:25:08.361 UTC [1753] ERROR:  column "senhaHash" of relation "users" does not exist at character 54
+2025-12-01 09:25:08.361 UTC [1753] STATEMENT:  INSERT INTO "public"."users" ("nome","cargo","email","senhaHash") VALUES ($1,$2,$3,$4) RETURNING "public"."users"."id", "public"."users"."nome", "public"."users"."cargo", "public"."users"."email", "public"."users"."senhaHash"
+2025-12-01 09:27:47.294 UTC [1130] LOG:  checkpoint starting: immediate force wait
+2025-12-01 09:27:47.325 UTC [1130] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.006 s, sync=0.008 s, total=0.031 s; sync files=6, longest=0.006 s, average=0.002 s; distance=4603 kB, estimate=4603 kB
+2025-12-01 09:27:47.900 UTC [3095] FATAL:  terminating connection due to administrator command
+2025-12-01 09:27:47.998 UTC [1130] LOG:  checkpoint starting: immediate force wait
+2025-12-01 09:27:48.034 UTC [1130] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.006 s, sync=0.011 s, total=0.037 s; sync files=4, longest=0.009 s, average=0.003 s; distance=4603 kB, estimate=4603 kB
+2025-12-01 09:32:47.135 UTC [1130] LOG:  checkpoint starting: time
+2025-12-01 09:32:49.505 UTC [1130] LOG:  checkpoint complete: wrote 24 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.326 s, sync=0.007 s, total=2.371 s; sync files=21, longest=0.004 s, average=0.001 s; distance=75 kB, estimate=4150 kB
+2025-12-01 09:37:47.600 UTC [1130] LOG:  checkpoint starting: time
+2025-12-01 09:37:47.785 UTC [1130] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.127 s, sync=0.007 s, total=0.186 s; sync files=2, longest=0.005 s, average=0.004 s; distance=0 kB, estimate=3735 kB
+2025-12-01 10:35:36.561 UTC [17871] LOG:  invalid length of startup packet
+2025-12-01 10:35:36.569 UTC [17872] LOG:  invalid length of startup packet
+2025-12-01 10:41:54.107 UTC [19633] LOG:  invalid length of startup packet
+2025-12-01 10:41:54.147 UTC [19634] LOG:  invalid length of startup packet
+2025-12-01 11:33:20.340 UTC [39642] LOG:  invalid length of startup packet
+2025-12-01 11:33:20.396 UTC [39645] LOG:  invalid length of startup packet
+2025-12-01 11:42:50.000 UTC [1130] LOG:  checkpoint starting: time
+2025-12-01 11:42:50.470 UTC [1130] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.412 s, sync=0.018 s, total=0.471 s; sync files=5, longest=0.016 s, average=0.004 s; distance=1 kB, estimate=3362 kB
+2025-12-01 11:52:01.976 UTC [44649] LOG:  invalid length of startup packet
+2025-12-01 11:52:02.000 UTC [44650] LOG:  invalid length of startup packet
+2025-12-01 14:07:52.104 UTC [1130] LOG:  checkpoint starting: time
+2025-12-01 14:07:52.624 UTC [1130] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.413 s, sync=0.010 s, total=0.521 s; sync files=5, longest=0.008 s, average=0.002 s; distance=1 kB, estimate=3026 kB
+2025-12-01 14:22:52.918 UTC [1130] LOG:  checkpoint starting: time
+2025-12-01 14:22:53.366 UTC [1130] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.409 s, sync=0.009 s, total=0.449 s; sync files=5, longest=0.007 s, average=0.002 s; distance=1 kB, estimate=2723 kB
