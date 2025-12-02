@@ -3,10 +3,22 @@ const STATUS_ID_PENDENTE = 1;
 const prisma = new PrismaClient();
 
 const projetoService = {
+    
     async getProjetos(): Promise<Projeto[]> {
         return prisma.projeto.findMany();
         
     }, //getProjetos
+
+    async addUsuario(projetoId: number, userId: number): Promise<void> {
+        await prisma.projetoUsuarios.create({
+          data: {
+            projetoId,
+            userId,
+          },
+        });
+    }, //addUsuario
+
+    //getProjetoById
 
     async getProjetoById(id: number): Promise<Projeto | null> {
         return prisma.projeto.findUnique({ where: { id }, include: {

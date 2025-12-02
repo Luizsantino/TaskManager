@@ -10,5 +10,7 @@ export const API_BASE_URL = "/api";
 export const API_ENDPOINTS = {
     LOGIN: `${API_BASE_URL}/login`,
     USERS: `${API_BASE_URL}/users`,
+    PROJETOS: `${API_BASE_URL}/projetos`,
+    TAREFAS: `${API_BASE_URL}/tarefas`,
     // ...
 };

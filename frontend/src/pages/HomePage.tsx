@@ -1,51 +1,143 @@
-import { Box, Button, Paper, Typography, Avatar } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import CriarProjetoModal from '../components/projetos/CriarProjetoModal';
+import {
+  Box, Container, Typography, Grid, Button, Paper, Alert,
+  CircularProgress
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import SettingsIcon from '@mui/icons-material/Settings';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
-const AVATAR_SIZE = 72;
+import type { Projeto } from '../types/projeto';
 
-const Home: React.FC = () => {
-  const navigate = useNavigate();
-  return (
-    <Box position="relative" minHeight="100vh" width="100vw">
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
-        <Paper elevation={2} sx={{ p: 3, width: 320 }}>
-          <Box textAlign="center" mb={2}>
-            <Box display="flex" justifyContent="center" mb={1}>
-              <Avatar
-                src="https://cdn-icons-png.flaticon.com/512/7858/7858230.png"
-                alt="Task Manager"
-                sx={{
-                  width: AVATAR_SIZE,
-                  height: AVATAR_SIZE,
-                  bgcolor: "transparent",
-                }}
-                slotProps={{ img: { loading: "lazy" } }}
-              />
-            </Box>
-            <Typography variant="h5" component="h1" fontWeight={600} mb={2}>
-              Clínica Médica
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              sx={{ mb: 2 }}
-              type="button"
-              onClick={() => navigate("/users")}
-            >
-              users
-            
-            </Button>
-          </Box>
-        </Paper>
+// Tipagem para o usuário
+interface IUser {
+  nome: string;
+  cargo: string;
+}
+
+// Componentes
+const ListaProjetos: React.FC<{ projetos: Projeto[] }> = ({ projetos }) => (
+  <Paper sx={{ p: 2, minHeight: 300 }}>
+    <Typography variant="h6" gutterBottom>📋 Meus Projetos Ativos</Typography>
+    {projetos.length > 0 ? (
+      projetos.map(p => (
+        <Box key={p.id} sx={{ mb: 1 }}>
+          <Typography>{p.nome}</Typography>
+        </Box>
+      ))
+    ) : (
+      <Alert severity="info">Nenhum projeto cadastrado.</Alert>
+    )}
+  </Paper>
+);
+
+const ListaTarefas: React.FC = () => (
+  <Paper sx={{ p: 2, minHeight: 300 }}>
+    <Typography variant="h6" gutterBottom>✅ Tarefas Pendentes</Typography>
+    <Alert severity="warning">Lista de tarefas do usuário será carregada aqui.</Alert>
+  </Paper>
+);
+
+const HomePage: React.FC = () => {
+  const user: IUser = { nome: "Luiz", cargo: "Desenvolvedor" };
+  const isLoading: boolean = false;
+
+  const [isProjetoModalOpen, setIsProjetoModalOpen] = React.useState(false);
+  const [projetos, setProjetos] = React.useState<Projeto[]>([]);
+
+  const openProjetoModal = () => setIsProjetoModalOpen(true);
+  const closeProjetoModal = () => setIsProjetoModalOpen(false);
+
+  const handleProjetoCreated = (projeto: Projeto) => {
+    setProjetos(prev => [...prev, projeto]);
+  };
+
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+        <CircularProgress />
       </Box>
-    </Box>
+    );
+  }
+
+  return (
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      {/* Modal de criação de projeto */}
+      <CriarProjetoModal
+        open={isProjetoModalOpen}
+        onClose={closeProjetoModal}
+        onProjetoCreated={handleProjetoCreated}
+      />
+
+      {/* Header */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+        <Typography variant="h4" component="h1" fontWeight={700}>
+          Bem-vindo(a), {user.nome}!
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          {user.cargo}
+        </Typography>
+      </Box>
+
+      {/* Ações Rápidas */}
+      <Grid container spacing={2} sx={{ mb: 4 }}>
+        <Grid item xs="auto">
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={openProjetoModal}
+          >
+            Criar Novo Projeto
+          </Button>
+        </Grid>
+
+        <Grid item xs="auto">
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<AddIcon />}
+          >
+            Criar Nova Tarefa
+          </Button>
+        </Grid>
+
+        <Grid item xs="auto">
+          <Button
+            variant="outlined"
+            color="warning"
+            startIcon={<VpnKeyIcon />}
+          >
+            Alterar Senha
+          </Button>
+        </Grid>
+
+        <Grid item xs="auto">
+          <Button
+            variant="text"
+            color="error"
+            startIcon={<SettingsIcon />}
+          >
+            Logout
+          </Button>
+        </Grid>
+      </Grid>
+
+      <hr />
+
+      {/* Dashboard */}
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+          <ListaProjetos projetos={projetos} />
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <ListaTarefas />
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 
-export default Home;
+export default HomePage;

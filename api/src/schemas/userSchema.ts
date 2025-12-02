@@ -7,7 +7,7 @@ export const userSchema = z.object({
   
   // Novos campos para Autenticação
   email: z.string().email("Formato de e-mail inválido.").min(1, "O e-mail é obrigatório."),
-  senha: z.string().min(6, "A senha deve ter no mínimo 6 caracteres."),
+  senha: z.string().min(4, "A senha deve ter no mínimo 4 caracteres."),
 });
 
 // Para updates parciais (o Front-end pode usar isso para PATCH requests)

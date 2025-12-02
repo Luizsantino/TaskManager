@@ -1,5 +1,5 @@
 import { Router } from "express";
-import projetoController from "../controllers/projetoController";
+import projetoController, { addUsuarioToProjeto } from "../controllers/projetoController";
 import validate from "../middlewares/validate";
 import { projetoSchema, projetoUpdateSchema } from "../schemas/projetoSchema";
 
@@ -35,6 +35,42 @@ const routes = Router();
  *           type: string
  *           format: date
  *           example: "1970-01-01T00:00:00.000Z"
+ */
+
+/**
+ * @swagger
+ * /api/projetos/{projetoId}/usuarios:
+ *   post:
+ *     summary: Adiciona um usuário a um projeto
+ *     tags: [Projetos]
+ *     parameters:
+ *       - in: path
+ *         name: projetoId
+ *         required: true
+ *         description: ID do projeto
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *             properties:
+ *               userId:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Usuário adicionado ao projeto com sucesso
+ *       400:
+ *         description: userId não fornecido
+ *       404:
+ *         description: Projeto não encontrado
+ *       500:
+ *         description: Erro interno do servidor
  */
 
 /**
@@ -130,5 +166,7 @@ routes.get("/projetos", projetoController.getProjetos);
 routes.get("/projetos/:id", projetoController.getProjetoById);
 routes.put("/projetos/:id", validate(projetoUpdateSchema), projetoController.updateProjeto);
 routes.delete("/projetos/:id", projetoController.deleteProjeto);
+// Rota para vincular usuário a um projeto
+routes.post('/:projetoId/usuarios', addUsuarioToProjeto);
 
 export default routes;
