@@ -15,16 +15,12 @@ interface ProjetoInfoModalProps {
   open: boolean;
   onClose: () => void;
   projeto: Projeto | null;
-  onEdit: () => void;
-  onDelete: (id: number) => void;
 }
 
 const ProjetoInfoModal: React.FC<ProjetoInfoModalProps> = ({
   open,
   onClose,
   projeto,
-  onEdit,
-  onDelete
 }) => {
   if (!projeto) return null;
 
@@ -59,12 +55,7 @@ const ProjetoInfoModal: React.FC<ProjetoInfoModalProps> = ({
       </DialogContent>
 
       <DialogActions>
-        <Button variant="outlined" color="primary" onClick={onEdit}>
-          Editar
-        </Button>
-        <Button variant="outlined" color="error" onClick={() => onDelete(projeto.id)}>
-          Excluir
-        </Button>
+        
         <Button variant="contained" onClick={onClose}>
           Fechar
         </Button>

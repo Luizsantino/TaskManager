@@ -66,20 +66,4 @@ const projetoController = {
   },
 };
 
-export const addUsuarioToProjeto = async (req: Request, res: Response) => {
-  try {
-    const projetoId = Number(req.params.projetoId);
-    const { userId } = req.body;
-
-    if (!userId) return res.status(400).json({ error: "userId é obrigatório" });
-
-    await projetoService.addUsuario(projetoId, userId);
-
-    res.status(200).json({ message: "Usuário adicionado ao projeto com sucesso" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Erro ao adicionar usuário ao projeto" });
-  }
-};
-
 export default projetoController;

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_ENDPOINTS } from "../config/api";
-import type { Tarefa, TarefaCreatePayload, TarefaUpdatePayload } from "../types/tarefa";
+// Importando os tipos canônicos da Tarefa e seus payloads
+import type { Tarefa, TarefaCreatePayload, TarefaUpdatePayload, StatusTarefa } from "../types/tarefa"; 
 
 // --- Funções de Serviço ---
 
@@ -21,15 +22,15 @@ export const getTarefas = async (projetoId?: number): Promise<Tarefa[]> => {
  * Cria uma nova tarefa.
  */
 export const createTarefa = async (dados: TarefaCreatePayload): Promise<Tarefa> => {
-    // A API deve lidar com a atribuição de `concluida: false` e `statusTarefaId` inicial
     const res = await axios.post<Tarefa>(API_ENDPOINTS.TAREFAS, dados);
     return res.data;
 };
 
 /**
- * Atualiza uma tarefa existente.
+ * Atualiza uma tarefa existente (campos parciais).
+ * Usa Partial<TarefaCreatePayload> para permitir a atualização de campos básicos.
  * @param id - ID da tarefa a ser atualizada
- * @param dados - Dados da tarefa para atualizar (parcial ou completo)
+ * @param dados - Dados da tarefa para atualizar (parcial)
  */
 export const updateTarefa = async (id: number, dados: Partial<TarefaCreatePayload>): Promise<Tarefa> => {
     const res = await axios.put<Tarefa>(`${API_ENDPOINTS.TAREFAS}/${id}`, dados);
@@ -38,12 +39,12 @@ export const updateTarefa = async (id: number, dados: Partial<TarefaCreatePayloa
 
 /**
  * Atualiza o status (concluída e/ou statusTarefaId) de uma tarefa.
+ * Usa TarefaUpdatePayload (que inclui 'concluida') para flexibilidade.
  * @param id - ID da tarefa
  * @param dados - Objeto contendo `concluida` e/ou `statusTarefaId`
  */
 export const updateTarefaStatus = async (id: number, dados: TarefaUpdatePayload): Promise<Tarefa> => {
-    // Geralmente, para endpoints específicos de status, usa-se um endpoint dedicado:
-    // Ex: PUT /api/tarefas/:id/status
+    // Geralmente, PATCH é usado para updates parciais de campos
     const res = await axios.patch<Tarefa>(`${API_ENDPOINTS.TAREFAS}/${id}`, dados);
     return res.data;
 };
@@ -56,11 +57,20 @@ export const deleteTarefa = async (id: number): Promise<void> => {
     await axios.delete(`${API_ENDPOINTS.TAREFAS}/${id}`);
 };
 
+/**
+ * Busca a lista de todos os status disponíveis para tarefas.
+ */
+export const getStatusTarefas = async (): Promise<StatusTarefa[]> => {
+    // Assumimos que o endpoint para StatusTarefa é genérico (API_ENDPOINTS.STATUSES)
+    const res = await axios.get<StatusTarefa[]>(API_ENDPOINTS.TAREFAS);
+    return res.data;
+};
+
 
 // --- Exportação Padrão ---
 
 /**
- * Exportando todas as funções no default para facilitar import (como no seu exemplo).
+ * Exportando todas as funções no default para facilitar import.
  */
 export default {
     getTarefas,
@@ -68,4 +78,5 @@ export default {
     updateTarefa,
     updateTarefaStatus,
     deleteTarefa,
+    getStatusTarefas,
 };

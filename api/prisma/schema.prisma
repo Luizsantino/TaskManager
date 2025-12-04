@@ -41,14 +41,15 @@ model Projeto {
 
 // ------------------- PROJETO-USUARIOS (intermediário) -------------------
 model ProjetoUsuarios {
-  projetoId Int
-  userId    Int
+  projetoId Int
+  userId    Int
 
-  projeto   Projeto @relation(fields: [projetoId], references: [id])
-  usuario   User    @relation(fields: [userId], references: [id])
+  // CORRIGIDO: Adicionando onDelete: Cascade
+  projeto   Projeto @relation(fields: [projetoId], references: [id], onDelete: Cascade) 
+  usuario   User    @relation(fields: [userId], references: [id]) // Não precisa de Cascade aqui
 
-  @@id([projetoId, userId])
-  @@map("projeto_usuarios")
+  @@id([projetoId, userId])
+  @@map("projeto_usuarios")
 }
 
 // ------------------- STATUS -------------------

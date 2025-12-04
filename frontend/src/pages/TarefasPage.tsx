@@ -11,25 +11,33 @@ import {
     InputAdornment,
     MenuItem,
     Chip,
+    CircularProgress,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
-// Imports de Projetos
-import { ProjetosTable } from "../components/projetos/ProjetoTable";
-import { CriarProjetoModal } from "../components/projetos/CriarProjetoModal";
-import { EditarProjetoModal } from "../components/projetos/EditarProjetoModal";
+
+// Imports de Tarefas e Serviços
+import { TarefaTable } from "../components/tarefas/TarefaTable";
+import { CriarTarefaModal } from "../components/tarefas/CriarTarefaModal";
+import { EditarTarefaModal } from "../components/tarefas/EditarTarefaModal"; 
 import {
-    getProjetos,
-    updateProjeto,
-    deleteProjeto,
-} from "../services/projetoService";
-import type { Projeto } from "../types/projeto";
+    getTarefas,
+    updateTarefa, 
+    deleteTarefa,
+} from "../services/tarefaService";
+import type { Tarefa } from "../types/tarefa";
+// CORREÇÃO 1: Importando o tipo Projeto para uso na tipagem com relacionamentos
+import type { Projeto } from "../types/projeto"; 
 import { useDebounce } from "../hooks/useDebounce";
 
-// *** Componente de Tabela Mock, pois o original estava faltando ***
-// Em um projeto real, você importaria este componente.
-
+// Tipagem local da Tarefa Com Relacionamentos (Copiada do TarefaTable para consistência)
+// CORREÇÃO 1: Tornando o campo 'projeto' opcional para resolver a incompatibilidade TS2719
+interface TarefaComRelacoes extends Tarefa {
+    assignee?: { nome: string } | null;
+    statusTarefa?: { nome: string };
+    projeto?: Projeto; // AGORA OPCIONAL
+}
 
 
 type SnackbarState = {
@@ -38,34 +46,39 @@ type SnackbarState = {
     severity: "success" | "error" | "info" | "warning";
 };
 
-export const ProjetosPage = () => {
+// Componente principal renomeado para TarefasPage
+export const TarefasPage = () => {
     const navigate = useNavigate();
-    // 2. Variável de estado mantida como Projetos (com P maiúsculo, conforme o original)
-    const [Projetos, setProjetos] = useState<Projeto[]>([]); 
+    // CORREÇÃO 2: Variável de estado da lista deve usar TarefaComRelacoes
+    const [Tarefas, setTarefas] = useState<TarefaComRelacoes[]>([]); 
     const [loading, setLoading] = useState(true);
     const [modalCriarOpen, setModalCriarOpen] = useState(false);
-    const [modalEditarOpen, setModalEditarOpen] = useState(false);
-    const [projetoSelecionado, setProjetoSelecionado] =
-      useState<Projeto | null>(null);
+    
+    // CORREÇÃO 3: Estados de edição devem usar TarefaComRelacoes
+    const [modalEditarOpen, setModalEditarOpen] = useState(false); 
+    const [tarefaSelecionada, setTarefaSelecionada] = useState<TarefaComRelacoes | null>(null); 
+    
     const [deletingId, setDeletingId] = useState<number | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filtroData, setFiltroData] = useState(""); // Filtro por período de data de início
+    const [filtroStatus, setFiltroStatus] = useState(""); // Filtro por Status
     const [snackbar, setSnackbar] = useState<SnackbarState>({
       open: false,
       message: "",
       severity: "info",
     });
 
-    const carregarProjetos = useCallback(async () => {
+    // Função para carregar tarefas
+    const carregarTarefas = useCallback(async () => {
         setLoading(true);
         try {
-          const data = await getProjetos();
-          setProjetos(data);
+          // O retorno de getTarefas é castado para o tipo com relacionamentos
+          const data = await getTarefas();
+          setTarefas(data as TarefaComRelacoes[]);
         } catch (error) {
-          console.error("Erro ao carregar projetos:", error);
+          console.error("Erro ao carregar tarefas:", error);
           setSnackbar({
             open: true,
-            message: "Erro ao buscar projetos.",
+            message: "Erro ao buscar tarefas.",
             severity: "error",
           });
         } finally {
@@ -74,26 +87,27 @@ export const ProjetosPage = () => {
       }, []);
 
     useEffect(() => {
-        carregarProjetos();
-    }, [carregarProjetos]);
+        carregarTarefas();
+    }, [carregarTarefas]);
 
-    // 3. Função de exclusão corrigida (setProjeto para setProjetos)
+    // Função de exclusão
     const handleDelete = useCallback(async (id: number) => {
         setDeletingId(id);
     
         try {
-          await deleteProjeto(id);
-          setProjetos((prev) => prev.filter((c) => c.id !== id));
+          await deleteTarefa(id);
+          // Atualiza a lista removendo a tarefa deletada
+          setTarefas((prev) => prev.filter((c) => c.id !== id) as TarefaComRelacoes[]);
           setSnackbar({
             open: true,
-            message: "Projeto deletado com sucesso.",
+            message: "Tarefa deletada com sucesso.",
             severity: "success",
           });
         } catch (error) {
-          console.error("Erro ao excluir projeto:", error);
+          console.error("Erro ao excluir tarefa:", error);
           setSnackbar({
             open: true,
-            message: "Erro ao deletar projeto.",
+            message: "Erro ao deletar tarefa.",
             severity: "error",
           });
         } finally {
@@ -101,109 +115,69 @@ export const ProjetosPage = () => {
         }
       }, []);
     
-      const handleOpenEditModal = useCallback((projeto: Projeto) => {
-        setProjetoSelecionado(projeto);
+    // Funções de Edição (Corrigidas para usar TarefaComRelacoes)
+    const handleOpenEditModal = useCallback((tarefa: TarefaComRelacoes) => {
+        setTarefaSelecionada(tarefa);
         setModalEditarOpen(true);
-      }, []);
+    }, []);
 
-      const handleCloseEditModal = useCallback(() => {
-        setProjetoSelecionado(null);
+    const handleCloseEditModal = useCallback(() => {
+        setTarefaSelecionada(null);
         setModalEditarOpen(false);
-      }, []);
+    }, []);
 
-      const handleSaveEdit = useCallback(
-        // Ajustando a tipagem de dados, pois o modal envia Partial<ProjetoFormData>
+    const handleSaveEdit = useCallback(
         async (id: number, dados: any) => { 
-          try {
-            // updateProjeto espera ProjetoPayload, que é mais restrito que Partial<Projeto>
-            // mas para simplificar, usaremos o tipo mais amplo (any ou o tipo correto do modal)
-            await updateProjeto(id, dados); 
-            await carregarProjetos();
+            await updateTarefa(id, dados); 
+            await carregarTarefas();
             setSnackbar({
-              open: true,
-              message: "Projeto atualizado com sucesso.",
-              severity: "success",
+                open: true,
+                message: "Tarefa atualizada com sucesso.",
+                severity: "success",
             });
-          } catch (error) {
-            console.error("Erro ao atualizar projeto:", error);
-            setSnackbar({
-              open: true,
-              message: "Erro ao atualizar projeto.",
-              severity: "error",
-            });
-            throw error;
-          }
         },
-        [carregarProjetos]
-      );
+        [carregarTarefas]
+    );
 
-    // 4. Nova função para lidar com o sucesso na criação do projeto
-    const handleSucessoCriarProjeto = useCallback(async () => {
+    // Função para lidar com o sucesso na criação da tarefa
+    const handleSucessoCriarTarefa = useCallback(async () => {
         setModalCriarOpen(false);
-        await carregarProjetos();
+        await carregarTarefas();
         setSnackbar({
             open: true,
-            message: "Projeto cadastrado com sucesso!",
+            message: "Tarefa cadastrada com sucesso!",
             severity: "success",
         });
-    }, [carregarProjetos]);
+    }, [carregarTarefas]);
 
-    // Variável debounced já estava definida corretamente
+    // Variável debounced
     const debouncedSerachTerm = useDebounce(searchTerm, 300);
 
-    // 5. useMemo corrigido (de useNemo para useMemo e dependências/variáveis)
-    const projetosFiltrados = useMemo(() => {
-        let resultado = [...Projetos]; // Usando Projetos (estado)
+    // Lógica de Filtro
+    const tarefasFiltradas = useMemo(() => {
+        let resultado = [...Tarefas]; 
 
-        // Filtro de busca por texto
+        // 1. Filtro de busca por texto (título ou descrição)
         if(debouncedSerachTerm.trim()) {
             const termoBusca = debouncedSerachTerm.toLowerCase();
-            resultado = resultado.filter((projeto) => {
+            resultado = resultado.filter((tarefa) => {
                 return (
-                    projeto.nome.toLowerCase().includes(termoBusca) ||
-                    projeto.descricao?.toLowerCase().includes(termoBusca) // Incluindo busca por descrição
+                    tarefa.titulo.toLowerCase().includes(termoBusca) ||
+                    tarefa.descricao?.toLowerCase().includes(termoBusca) 
                 );
             });
         }
         
-        // filtro por periodo de data
-        if (filtroData) {
-            const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
-
-            resultado = resultado.filter((projeto) => {
-                const dataInicio = new Date(projeto.dataInicio);
-                dataInicio.setHours(0, 0, 0, 0); // Zera hora para comparação de datas
-
-                switch (filtroData) {
-                    case "hoje": {
-                        // Compara apenas a data
-                        return dataInicio.getTime() === hoje.getTime(); 
-                    }
-                    case "semana": {
-                        const semanaFutura = new Date(hoje);
-                        semanaFutura.setDate(hoje.getDate() + 7);
-                        return dataInicio >= hoje && dataInicio <= semanaFutura;
-                    }
-                    case "mes": {
-                        return dataInicio.getFullYear() === hoje.getFullYear() && dataInicio.getMonth() === hoje.getMonth();
-                    }
-                    case "futuras": {
-                        return dataInicio > hoje;
-                    }
-                    case "passadas": {
-                        return dataInicio < hoje;
-                    }
-                    default:
-                        return true;
-                }
-            });
+        // 2. Filtro por Status (usa o ID do status)
+        if (filtroStatus) {
+            const statusId = Number(filtroStatus);
+            resultado = resultado.filter((tarefa) => tarefa.statusTarefaId === statusId);
         }
-        return resultado;
-    // 6. Dependências do useMemo corrigidas para Projetos
-    }, [Projetos, debouncedSerachTerm, filtroData]);
 
-    // *** INÍCIO DO RETORNO (JSX) CORRIGIDO ***
+        return resultado;
+    }, [Tarefas, debouncedSerachTerm, filtroStatus]);
+
+    // --- RETORNO (JSX) ---
     return (
         <Box
             display="flex"
@@ -236,7 +210,7 @@ export const ProjetosPage = () => {
                 </IconButton>
 
                 <Typography variant="h5" fontWeight={600} mb={3} textAlign="center">
-                    Gerenciar Projetos
+                    Gerenciar Tarefas
                 </Typography>
 
                 <Box
@@ -248,11 +222,10 @@ export const ProjetosPage = () => {
                     <Box flex={1}>
                         <TextField
                             fullWidth
-                            // 8. Placeholder de busca corrigido
-                            placeholder="Buscar por nome ou descrição do projeto..."
+                            placeholder="Buscar por título ou descrição da tarefa..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            InputProps={{ // Correção da prop slotProps para InputProps
+                            InputProps={{ 
                                 startAdornment: (
                                     <InputAdornment position="start">
                                         <SearchIcon />
@@ -266,43 +239,41 @@ export const ProjetosPage = () => {
                         <TextField
                             select
                             fullWidth
-                            label="Filtrar por período"
-                            value={filtroData}
-                            onChange={(e) => setFiltroData(e.target.value)}
+                            label="Filtrar por Status"
+                            value={filtroStatus}
+                            onChange={(e) => setFiltroStatus(e.target.value)}
                             size="small"
                         >
-                            <MenuItem value="">Todas as Datas</MenuItem>
-                            <MenuItem value="hoje">Iniciando Hoje</MenuItem>
-                            <MenuItem value="semana">Próximos 7 dias</MenuItem>
-                            <MenuItem value="mes">Este mês</MenuItem>
-                            <MenuItem value="futuras">Futuras</MenuItem>
-                            <MenuItem value="passadas">Passadas</MenuItem>
+                            <MenuItem value="">Todos os Status</MenuItem>
+                            {/* NOTE: Em um projeto completo, você carregaria a lista de StatusTarefa aqui */}
+                            <MenuItem value={1}>Pendente</MenuItem>
+                            <MenuItem value={2}>Em Andamento</MenuItem>
+                            <MenuItem value={3}>Concluída</MenuItem>
                         </TextField>
                     </Box>
                 </Box>
 
-                {(debouncedSerachTerm || filtroData) && (
+                {(debouncedSerachTerm || filtroStatus) && (
                     <Box mb={2} display="flex" alignItems="center" gap={1}>
                         <Typography variant="body2" color="text.secondary">
                             Resultados encontrados:
                         </Typography>
                         <Chip
-                            // 9. Variável de contagem corrigida
-                            label={projetosFiltrados.length} 
+                            label={tarefasFiltradas.length} 
                             size="small"
                             color="primary"
                             variant="outlined"
                         />
-                        {projetosFiltrados.length !== Projetos.length && (
+                        {tarefasFiltradas.length !== Tarefas.length && (
                             <Typography variant="body2" color="text.secondary">
-                                de {Projetos.length} total
+                                de {Tarefas.length} total
                             </Typography>
                         )}
                     </Box>
                 )}
 
-                <ProjetosTable
-                    projetos={projetosFiltrados} // Variável corrigida
+                <TarefaTable // Componente de Tabela de Tarefas
+                    tarefas={tarefasFiltradas} 
                     deletingId={deletingId}
                     onDelete={handleDelete}
                     onEdit={handleOpenEditModal}
@@ -316,7 +287,7 @@ export const ProjetosPage = () => {
                         className="uppercase font-bold"
                         onClick={() => setModalCriarOpen(true)}
                     >
-                        Cadastrar Novo Projeto 
+                        Cadastrar Nova Tarefa 
                     </Button>
                 </Box>
 
@@ -336,22 +307,20 @@ export const ProjetosPage = () => {
                 </Snackbar>
             </Paper>
 
-            <CriarProjetoModal 
+            <CriarTarefaModal
                 open={modalCriarOpen}
                 onClose={() => setModalCriarOpen(false)}
-                onProjetoCreated={handleSucessoCriarProjeto} // Função corrigida
+                onTarefaCreated={handleSucessoCriarTarefa}
             />
 
-            
-            <EditarProjetoModal 
+            {/* Modal de Edição Ativado */}
+            <EditarTarefaModal
                 open={modalEditarOpen}
                 onClose={handleCloseEditModal}
                 onSave={handleSaveEdit}
-                projeto={projetoSelecionado} // Variável corrigida
+                tarefa={tarefaSelecionada}
             />
             
         </Box>
     );
 };
-
-export default ProjetosPage;

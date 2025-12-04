@@ -1,5 +1,5 @@
 import { Router } from "express";
-import projetoController, { addUsuarioToProjeto } from "../controllers/projetoController";
+import projetoController from "../controllers/projetoController";
 import validate from "../middlewares/validate";
 import { projetoSchema, projetoUpdateSchema } from "../schemas/projetoSchema";
 
@@ -166,7 +166,5 @@ routes.get("/projetos", projetoController.getProjetos);
 routes.get("/projetos/:id", projetoController.getProjetoById);
 routes.put("/projetos/:id", validate(projetoUpdateSchema), projetoController.updateProjeto);
 routes.delete("/projetos/:id", projetoController.deleteProjeto);
-// Rota para vincular usuário a um projeto
-routes.post('/:projetoId/usuarios', addUsuarioToProjeto);
 
 export default routes;

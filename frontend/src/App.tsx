@@ -6,6 +6,8 @@ import ThemeToggleFloating from "./components/ThemeToggleFloating";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import { useState } from "react";
 import HomePage from "./pages/HomePage";
+import ProjetosPage from "./pages/ProjetosPage";
+import { TarefasPage } from "./pages/TarefasPage";
 
 function App() {
   const [mode, setMode] = useState<"light" | "dark">("light");
@@ -22,7 +24,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* Rota adicionada para a tela de Cadastro */}
+          <Route path="/tarefas" element={<TarefasPage />} />
+          <Route path="/projetos" element={<ProjetosPage />} />
           <Route path="/home" element={<HomePage />} /> 
         </Routes>
       </Router>
