@@ -53,3 +53,22 @@ export const validateLogin = (data: unknown) => {
       throw error;
     }
   };
+  
+  export const validateField = (
+    schema: z.ZodObject<any>,
+    fieldName: string,
+    value: any
+  ): string => {
+    try {
+      const fieldSchema = schema.shape[fieldName];
+      if (fieldSchema) {
+        fieldSchema.parse(value);
+      }
+      return "";
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return error.issues[0]?.message || "Valor inválido";
+      }
+      return "";
+    }
+  };

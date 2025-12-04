@@ -1,0 +1,14 @@
+caso de problema ao iniciar o banco de dados
+execute esses comandos
+
+1° 
+/usr/bin/postgres -D /home/user/TaskManager/api/local \
+  -p 5432 \
+  -k /home/user/TaskManager/api/tmp_sockets
+
+
+Essa execução fica travando o terminal, então abre um novo terminal ou adiciona & no final pra rodar em background:
+
+/usr/bin/postgres -D /home/user/TaskManager/api/local -p 5432 -k /home/user/TaskManager/api/tmp_sockets &
+
+depois tenta conectar o banco de dados novamente!

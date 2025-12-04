@@ -1,5 +1,6 @@
 import React from 'react';
 import CriarProjetoModal from '../components/projetos/CriarProjetoModal';
+import ProjetoInfoModal from '../components/projetos/ProjetoInfoModal';
 import {
   Box, Container, Typography, Grid, Button, Paper, Alert,
   CircularProgress
@@ -9,20 +10,23 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 
 import type { Projeto } from '../types/projeto';
+import projetoService from '../services/projetoService';
 
-// Tipagem para o usuário
 interface IUser {
   nome: string;
   cargo: string;
 }
 
-// Componentes
-const ListaProjetos: React.FC<{ projetos: Projeto[] }> = ({ projetos }) => (
+const ListaProjetos: React.FC<{ projetos: Projeto[]; onSelect: (p: Projeto) => void }> = ({ projetos, onSelect }) => (
   <Paper sx={{ p: 2, minHeight: 300 }}>
     <Typography variant="h6" gutterBottom>📋 Meus Projetos Ativos</Typography>
     {projetos.length > 0 ? (
       projetos.map(p => (
-        <Box key={p.id} sx={{ mb: 1 }}>
+        <Box
+          key={p.id}
+          sx={{ mb: 1, cursor: 'pointer', '&:hover': { color: 'primary.main' } }}
+          onClick={() => onSelect(p)}
+        >
           <Typography>{p.nome}</Typography>
         </Box>
       ))
@@ -44,33 +48,72 @@ const HomePage: React.FC = () => {
   const isLoading: boolean = false;
 
   const [isProjetoModalOpen, setIsProjetoModalOpen] = React.useState(false);
+  const [isProjetoInfoOpen, setIsProjetoInfoOpen] = React.useState(false);
+  const [projetoSelecionado, setProjetoSelecionado] = React.useState<Projeto | null>(null);
   const [projetos, setProjetos] = React.useState<Projeto[]>([]);
 
   const openProjetoModal = () => setIsProjetoModalOpen(true);
   const closeProjetoModal = () => setIsProjetoModalOpen(false);
 
+  const openProjetoInfoModal = (p: Projeto) => {
+    setProjetoSelecionado(p);
+    setIsProjetoInfoOpen(true);
+  };
+  const closeProjetoInfoModal = () => setIsProjetoInfoOpen(false);
+
   const handleProjetoCreated = (projeto: Projeto) => {
     setProjetos(prev => [...prev, projeto]);
   };
 
+  const handleProjetoUpdated = (projetoAtualizado: Projeto) => {
+    setProjetos(prev => prev.map(p => (p.id === projetoAtualizado.id ? projetoAtualizado : p)));
+  };
+
+  const handleProjetoDeleted = (id: number) => {
+    setProjetos(prev => prev.filter(p => p.id !== id));
+  };
+
+  React.useEffect(() => {
+    const fetchProjetos = async () => {
+      try {
+        const data = await projetoService.getProjetos();
+        setProjetos(data);
+      } catch (err) {
+        console.error("Erro ao carregar projetos:", err);
+      }
+    };
+
+    fetchProjetos();
+  }, []);
+
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-        <CircularProgress />
+        <CircularProgress /> 
       </Box>
     );
   }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      {/* Modal de criação de projeto */}
       <CriarProjetoModal
         open={isProjetoModalOpen}
         onClose={closeProjetoModal}
         onProjetoCreated={handleProjetoCreated}
+        projetoEdicao={projetoSelecionado}
+        onProjetoUpdated={handleProjetoUpdated}
       />
 
-      {/* Header */}
+      <ProjetoInfoModal
+        open={isProjetoInfoOpen}
+        onClose={closeProjetoInfoModal}
+        projeto={projetoSelecionado}
+        onEdit={() => {
+          closeProjetoInfoModal();
+          openProjetoModal();
+        } }
+        onDelete={handleProjetoDeleted} projetoEdicao={null}      />
+
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
         <Typography variant="h4" component="h1" fontWeight={700}>
           Bem-vindo(a), {user.nome}!
@@ -80,45 +123,27 @@ const HomePage: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* Ações Rápidas */}
       <Grid container spacing={2} sx={{ mb: 4 }}>
         <Grid item xs="auto">
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={openProjetoModal}
-          >
+          <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={openProjetoModal}>
             Criar Novo Projeto
           </Button>
         </Grid>
 
         <Grid item xs="auto">
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={<AddIcon />}
-          >
+          <Button variant="contained" color="secondary" startIcon={<AddIcon />}>
             Criar Nova Tarefa
           </Button>
         </Grid>
 
         <Grid item xs="auto">
-          <Button
-            variant="outlined"
-            color="warning"
-            startIcon={<VpnKeyIcon />}
-          >
+          <Button variant="outlined" color="warning" startIcon={<VpnKeyIcon />}>
             Alterar Senha
           </Button>
         </Grid>
 
         <Grid item xs="auto">
-          <Button
-            variant="text"
-            color="error"
-            startIcon={<SettingsIcon />}
-          >
+          <Button variant="text" color="error" startIcon={<SettingsIcon />}>
             Logout
           </Button>
         </Grid>
@@ -126,10 +151,9 @@ const HomePage: React.FC = () => {
 
       <hr />
 
-      {/* Dashboard */}
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <ListaProjetos projetos={projetos} />
+          <ListaProjetos projetos={projetos} onSelect={openProjetoInfoModal} />
         </Grid>
 
         <Grid item xs={12} md={6}>

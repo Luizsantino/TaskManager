@@ -1,126 +1,227 @@
-import { useState, useEffect } from "react";
-import { Modal, Box, TextField, Button, FormControl, InputLabel, Select, MenuItem, OutlinedInput, Chip } from "@mui/material";
-import projetoService, { type ProjetoPayload } from "../../services/projetoService";
-import userService from "../../services/userService"; // Supondo que você tenha um service para usuários
+import { useState, useEffect, useCallback } from "react";
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    Box,
+    TextField,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    OutlinedInput,
+    Chip,
+    CircularProgress,
+    Typography,
+} from "@mui/material";
+// Assumindo que o tipo ProjetoPayload agora é importado de um local unificado
+import projetoService from "../../services/projetoService"; 
+import userService from "../../services/userService"; 
 import type { User } from "../../types/user";
+import type { Projeto } from "../../types/projeto"; // Para tipar o retorno
+import type { ProjetoPayload } from "../../types/projeto"; // Assumindo que você definirá este tipo aqui
 
-interface ProjetoModalProps {
+// Interfaces de tipagem do componente
+interface CriarProjetoModalProps {
     open: boolean;
     onClose: () => void;
-    onProjetoCreated: (projeto: any) => void; // Callback para atualizar a lista de projetos
+    // Tipagem ajustada para o retorno do projeto
+    onProjetoCreated: (projeto: Projeto) => void; 
 }
 
-const ProjetoModal = ({ open, onClose, onProjetoCreated }: ProjetoModalProps) => {
-    const [nome, setNome] = useState("");
-    const [descricao, setDescricao] = useState("");
-    const [dataInicio, setDataInicio] = useState("");
-    const [dataFimPrevista, setDataFimPrevista] = useState("");
-    const [usuarios, setUsuarios] = useState<number[]>([]);
-    const [allUsuarios, setAllUsuarios] = useState<User[]>([]);
+// Interface para o estado inicial do formulário
+interface FormData {
+    nome: string;
+    descricao: string;
+    dataInicio: string;
+    dataFimPrevista: string;
+}
 
-    // Carrega lista de usuários para selecionar
-    useEffect(() => {
-        const fetchUsuarios = async () => {
-            try {
-                const usuarios = await userService.getUsers(); // Retorna lista de usuários
-                setAllUsuarios(usuarios);
-            } catch (err) {
-                console.error("Erro ao buscar usuários:", err);
-            }
-        };
-        fetchUsuarios();
+const initialFormData: FormData = {
+    nome: "",
+    descricao: "",
+    dataInicio: "",
+    dataFimPrevista: "",
+};
+
+
+export const CriarProjetoModal = ({ open, onClose, onProjetoCreated }: CriarProjetoModalProps) => {
+    
+    // Estados do Formulário
+    const [formData, setFormData] = useState<FormData>(initialFormData);
+    const [usuariosSelecionados, setUsuariosSelecionados] = useState<number[]>([]);
+    
+    // Estados de Dados e Processamento
+    const [allUsuarios, setAllUsuarios] = useState<User[]>([]);
+    const [loading, setLoading] = useState(false); // Para submissão
+    const [loadingData, setLoadingData] = useState(false); // Para carregar usuários
+
+    const { nome, descricao, dataInicio, dataFimPrevista } = formData;
+
+    // Função para buscar dados (usuários)
+    const loadData = useCallback(async () => {
+        setLoadingData(true);
+        try {
+            const usuariosData = await userService.getUsers();
+            setAllUsuarios(usuariosData);
+        } catch (err) {
+            console.error("Erro ao buscar usuários:", err);
+            // Em um app real, você adicionaria um Snackbar de erro aqui
+        } finally {
+            setLoadingData(false);
+        }
     }, []);
 
+    // Efeito para carregar usuários e resetar o formulário quando o modal abre
+    useEffect(() => {
+        if (open) {
+            loadData();
+            // Resetar formulário ao abrir (caso a submissão anterior tenha falhado ou o modal tenha sido fechado de forma incorreta)
+            setFormData(initialFormData);
+            setUsuariosSelecionados([]);
+        }
+    }, [open, loadData]);
+
+    // Função para limpar e fechar o modal
+    const handleClose = () => {
+        setFormData(initialFormData);
+        setUsuariosSelecionados([]);
+        setLoading(false);
+        onClose();
+    };
+    
+    // Handler para mudanças nos campos de texto
+    const handleInputChange = (field: keyof FormData, value: string) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+    };
+
+    // Handler para o multi-select de usuários
+    const handleUsuariosChange = (event: any) => {
+        const { target: { value } } = event;
+        // value pode ser um array de IDs ou uma string de IDs (dependendo da implementação)
+        const selectedIds = typeof value === 'string' ? value.split(',').map(Number) : value;
+        setUsuariosSelecionados(selectedIds);
+    };
+
     const handleSubmit = async () => {
+        // Implementar validação simples aqui (ex: verificar se nome está preenchido)
+        if (!nome || !dataInicio || !dataFimPrevista) {
+            alert("Por favor, preencha Nome, Data Início e Data Fim Prevista.");
+            return;
+        }
+
+        setLoading(true);
         try {
             const payload: ProjetoPayload = {
                 nome,
-                descricao,
+                descricao, // Pode ser null ou string
                 dataInicio: new Date(dataInicio).toISOString(),
                 dataFimPrevista: new Date(dataFimPrevista).toISOString(),
+                // Se ProjetoPayload exigir statusId, você deve adicioná-lo aqui
             };
     
             const projeto = await projetoService.createProjeto(payload);
     
-            // Vincula os usuários opcionalmente
-            for (const userId of usuarios) {
-                try {
-                    await projetoService.addUsuarioToProjeto(projeto.id, userId);
-                } catch (err) {
-                    console.error(`Erro ao vincular usuário ${userId}:`, err);
-                }
+            // Vincula os usuários (opcional)
+            for (const userId of usuariosSelecionados) {
+                // Não precisa de try/catch individualmente, o erro é mais geral
+                await projetoService.addUsuarioToProjeto(projeto.id, userId);
             }
     
             onProjetoCreated(projeto);
             handleClose();
         } catch (err: any) {
             console.error("Erro ao criar projeto:", err);
-            if (err.response) {
-                console.error("Resposta do servidor:", err.response.data);
-            }
+            // Mostrar erro no Snackbar do componente pai, se possível
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleClose = () => {
-        // Limpa campos ao fechar modal
-        setNome("");
-        setDescricao("");
-        setDataInicio("");
-        setDataFimPrevista("");
-        setUsuarios([]);
-        onClose();
-    };
-
     return (
-        <Modal open={open} onClose={handleClose}>
-            <Box sx={{
-                position: 'absolute', top: '50%', left: '50%',
-                transform: 'translate(-50%, -50%)', width: 400,
-                bgcolor: 'background.paper', p: 4, borderRadius: 2
-            }}>
-                <h2>Cadastrar Projeto</h2>
+        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+            <DialogTitle>Cadastrar Novo Projeto</DialogTitle>
+            <DialogContent dividers>
+                {loadingData ? (
+                    <Box sx={{ display: "flex", justifyContent: "center", py: 4, mt: 2 }}>
+                        <CircularProgress />
+                        <Typography ml={2}>Carregando dados...</Typography>
+                    </Box>
+                ) : (
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
+                        <TextField 
+                            fullWidth 
+                            label="Nome" 
+                            value={nome} 
+                            onChange={(e) => handleInputChange("nome", e.target.value)} 
+                        />
+                        <TextField 
+                            fullWidth 
+                            label="Descrição" 
+                            multiline
+                            rows={3}
+                            value={descricao} 
+                            onChange={(e) => handleInputChange("descricao", e.target.value)} 
+                        />
+                        <TextField
+                            fullWidth 
+                            label="Data Início" 
+                            type="date"
+                            value={dataInicio} 
+                            onChange={(e) => handleInputChange("dataInicio", e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                            fullWidth 
+                            label="Data Fim Prevista" 
+                            type="date"
+                            value={dataFimPrevista} 
+                            onChange={(e) => handleInputChange("dataFimPrevista", e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                        />
 
-                <TextField fullWidth label="Nome" value={nome} onChange={(e) => setNome(e.target.value)} margin="normal" />
-                <TextField fullWidth label="Descrição" value={descricao} onChange={(e) => setDescricao(e.target.value)} margin="normal" />
-                <TextField
-                    fullWidth label="Data Início" type="date"
-                    value={dataInicio} onChange={(e) => setDataInicio(e.target.value)}
-                    margin="normal" InputLabelProps={{ shrink: true }}
-                />
-                <TextField
-                    fullWidth label="Data Fim Prevista" type="date"
-                    value={dataFimPrevista} onChange={(e) => setDataFimPrevista(e.target.value)}
-                    margin="normal" InputLabelProps={{ shrink: true }}
-                />
-
-                {/* Multi-select de usuários */}
-                <FormControl fullWidth margin="normal">
-                    <InputLabel id="usuarios-label">Usuários</InputLabel>
-                    <Select
-                        labelId="usuarios-label"
-                        multiple
-                        value={usuarios}
-                        onChange={(e) => setUsuarios(typeof e.target.value === 'string' ? e.target.value.split(',').map(Number) : e.target.value)}
-                        input={<OutlinedInput label="Usuários" />}
-                        renderValue={(selected) => (
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                {selected.map((id) => {
-                                    const user = allUsuarios.find(u => u.id === id);
-                                    return <Chip key={id} label={user?.nome || id} />;
-                                })}
-                            </Box>
-                        )}
-                    >
-                        {allUsuarios.map(user => (
-                            <MenuItem key={user.id} value={user.id}>{user.nome}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-                <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 2 }}>Salvar</Button>
-            </Box>
-        </Modal>
+                        {/* Multi-select de usuários */}
+                        <FormControl fullWidth>
+                            <InputLabel id="usuarios-label">Membros da Equipe (Opcional)</InputLabel>
+                            <Select
+                                labelId="usuarios-label"
+                                multiple
+                                value={usuariosSelecionados}
+                                onChange={handleUsuariosChange}
+                                input={<OutlinedInput label="Membros da Equipe (Opcional)" />}
+                                renderValue={(selected) => (
+                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                        {selected.map((id) => {
+                                            const user = allUsuarios.find(u => u.id === id);
+                                            return <Chip key={id} label={user?.nome || `ID: ${id}`} size="small" />;
+                                        })}
+                                    </Box>
+                                )}
+                            >
+                                {allUsuarios.map(user => (
+                                    <MenuItem key={user.id} value={user.id}>{user.nome}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                )}
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose} disabled={loading}>
+                    Cancelar
+                </Button>
+                <Button 
+                    onClick={handleSubmit} 
+                    variant="contained" 
+                    color="primary"
+                    disabled={loading || loadingData || !nome || !dataInicio || !dataFimPrevista}
+                >
+                    {loading ? <CircularProgress size={24} /> : "Salvar Projeto"}
+                </Button>
+            </DialogActions>
+        </Dialog>
     );
 };
-
-export default ProjetoModal;
+export default CriarProjetoModal;
